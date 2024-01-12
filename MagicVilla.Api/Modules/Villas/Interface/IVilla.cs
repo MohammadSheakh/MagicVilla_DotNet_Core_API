@@ -1,4 +1,4 @@
-﻿namespace MagicVilla.Api.Services.Villa.Interface
+﻿namespace MagicVilla.Api.Modules.Villas.Interface
 {
     public interface IVilla
     {

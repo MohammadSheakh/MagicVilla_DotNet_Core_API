@@ -1,4 +1,5 @@
-﻿using MagicVilla.Api.Services.Villa.Dtos;
+﻿using MagicVilla.Api.Modules.Villas.Dtos;
+
 
 namespace MagicVilla.Api.Database
 {

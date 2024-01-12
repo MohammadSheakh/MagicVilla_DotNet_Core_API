@@ -1,17 +1,44 @@
 ﻿using MagicVilla.Api.Database;
-using MagicVilla.Api.Models;
-using MagicVilla.Api.Services.Villa.Dtos;
+using MagicVilla.Api.Helper.Logger;
+using MagicVilla.Api.Entities;
+
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using MagicVilla.Api.Modules.Villas.Dtos;
 
 namespace MagicVilla.Api.Controllers
 {
+   
+
     [Route("api/VillaAPI")]
     // [Route("api/[Controller]")]
     [ApiController] // this is for active validation
     public class VillaAPIController : ControllerBase
     {
+        // create and assign field logger .. 
+        //private readonly ILogger<VillaAPIController> _logger; // default logger
+        // ⚫ replace with new logger that we implement 
+
+
+        // dependency injection
+
+        // for controller -> ctor + tab 
+        //public VillaAPIController(ILogger<VillaAPIController> logger)
+        //{
+        //    _logger = logger;
+        //}
+
+        private readonly ILogging _logger;
+
+        public VillaAPIController(ILogging logger) // dependency injection
+        {
+            _logger = logger;
+        }
+
         [HttpGet]
         public ActionResult<IEnumerable<VillaDTO>> GetVillas () {
+            //_logger.LogInformation("Getting all villas");
+            _logger.Log("Getting all villas", "");
 
             //return new List<VillaDTO>
             //{
@@ -30,6 +57,7 @@ namespace MagicVilla.Api.Controllers
         {
             if (id == 0)
             {
+                //_logger.LogError("Get Villa Error with Id : ", id);
                 return BadRequest(); // 400
             }
             var villa = DataStore.villaList.FirstOrDefault(u => u.Id == id);
@@ -76,5 +104,66 @@ namespace MagicVilla.Api.Controllers
             return CreatedAtRoute("GetVilla", new {id = villaDto.Id}, villaDto);
         }
 
+
+        [HttpDelete("id", Name = "DeleteVilla")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)] 
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public IActionResult DeleteVilla(int id)
+        {
+            if(id == 0)
+            {
+                return BadRequest();
+            }
+            var villa = DataStore.villaList.FirstOrDefault(u => u.Id == id);
+            if(villa == null)
+            {
+                return NotFound();
+            }
+            DataStore.villaList.Remove(villa);
+            return NoContent(); // 204
+        }
+
+
+        [HttpPut("id", Name = "UpdateVilla")]
+        public IActionResult UpdateVilla(int id, [FromBody] VillaDTO villaDTO)
+        {
+            if(villaDTO == null || id != villaDTO.Id)
+            {
+                return BadRequest();
+            }
+            var villa = DataStore.villaList.FirstOrDefault(u => u.Id == id);
+
+            villa.Name = villaDTO.Name;
+
+            return NoContent();
+        }
+
+        [HttpPatch("id", Name = "UpdatePartialVilla")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public IActionResult UpdatePartialVilla(int id, JsonPatchDocument<VillaDTO> patchDto)
+        {
+            // validation
+            if(patchDto == null || id == 0)
+            {
+                return BadRequest();
+            }
+            var villa = DataStore.villaList.FirstOrDefault(u => u.Id == id);
+            if(villa == null)
+            {
+                return BadRequest();
+            }
+            patchDto.ApplyTo(villa, ModelState); //⚫ jsonpatch.com to see more details .. 
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            
+              //path: "/name", op : "replace", value: "new name "
+             // array er object hishebe pass korte hobe postman e 
+
+            return NoContent();
+        }
     }
 }
