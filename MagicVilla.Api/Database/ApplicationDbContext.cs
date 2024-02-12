@@ -14,6 +14,8 @@ namespace MagicVilla.Api.Database
 
         // individual dbset
         public DbSet<Villa> Villas { get; set; } // name will be table name 
+        public DbSet<VillaNumber> VillaNumbers { get; set; } 
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -11,7 +11,7 @@ namespace MagicVilla.Api.Repository
     {
         // add application db context
         private readonly ApplicationDbContext _db;
-        internal DbSet<Class> dbSet;
+        internal DbSet<Class> dbSet;// create internal DbSet
         public Repo(
             // using  dependency injection
             ApplicationDbContext db
@@ -30,7 +30,7 @@ namespace MagicVilla.Api.Repository
             await SaveAsync();
         }
 
-        public async Task<List<Class>> GetAllAsync(Expression<Func<Class, bool>> filter = null)
+        public async Task<List<Class>> GetAllAsync(Expression<Func<Class, bool>>? filter = null)// Expression<ekhane input and comma diye output ki hobe sheta bole dite hoy >
         {
             // IQueryable<Class> query = _db.Villas;
             IQueryable<Class> query = dbSet;
@@ -43,14 +43,14 @@ namespace MagicVilla.Api.Repository
             return await query.ToListAsync();
         }
 
-        public async Task<Class> GetAsync(Expression<Func<Class, bool>>? filter = null, bool tracked = true)
+        public async Task<Class> GetAsync(Expression<Func<Class, bool>> filter = null, bool tracked = true)
         {
             // IQueryable<Class> query = _db.Villas;
             IQueryable<Class> query = dbSet;
 
             if (!tracked)
             {
-                query = query.AsNoTracking();
+                query = query.AsNoTracking(); // tracked na kora hole sheta bole dite hobe .. 
             }
 
             if (filter != null)

@@ -24,6 +24,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Modules\VillaNumber\Dtos\" />
+    <Folder Include="Modules\VillaNumber\Interface\" />
     <Folder Include="Modules\Villas\Handlers\" />
   </ItemGroup>
 

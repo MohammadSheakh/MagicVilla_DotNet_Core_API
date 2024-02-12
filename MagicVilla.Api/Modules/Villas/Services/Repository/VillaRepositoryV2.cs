@@ -8,7 +8,7 @@ using System.Linq.Expressions;
 
 namespace MagicVilla.Api.Modules.Villas.Services.Repository
 {
-    public class VillaRepositoryV2 : Repo<Villa, int , Villa>,  IVillaRepository
+    public class VillaRepositoryV2 : Repo<Villa, int , Villa>,  IVillaRepository // it only contain update method
     {
         // add application db context
         private readonly ApplicationDbContext _db;
